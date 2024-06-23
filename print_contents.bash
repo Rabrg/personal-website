@@ -1,0 +1,1 @@
+find . -type f \( -name "*.js" -o -name "*.ts" -o -name "*.tsx" -o -name "*.html" -o -name "*.css" -o -name "*.json" -o -name "*.env" \) -not -path "*/node_modules/*" -not -path "*/.next/*" -print0 | xargs -0 -I {} sh -c 'echo "File: {}"; cat "{}"; echo "\n"' | pbcopy
