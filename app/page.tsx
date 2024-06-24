@@ -3,6 +3,7 @@ import {BlogPosts} from 'app/components/posts'
 import LiteralAPI from 'app/lib/literal'
 import LastFmAPI from 'app/lib/lastfm'
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 async function getRecentBooks() {
     const api = new LiteralAPI();
@@ -126,6 +127,7 @@ export default async function Page() {
                 <BlogPosts/>
             </div>
             <SpeedInsights />
+            <Analytics />
         </section>
     )
 }
