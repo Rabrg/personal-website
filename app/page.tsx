@@ -2,6 +2,7 @@ import Image from 'next/image'
 import {BlogPosts} from 'app/components/posts'
 import LiteralAPI from 'app/lib/literal'
 import LastFmAPI from 'app/lib/lastfm'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 async function getRecentBooks() {
     const api = new LiteralAPI();
@@ -124,6 +125,7 @@ export default async function Page() {
             <div className="my-8">
                 <BlogPosts/>
             </div>
+            <SpeedInsights />
         </section>
     )
 }
