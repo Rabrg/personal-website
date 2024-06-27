@@ -2,8 +2,20 @@ import Image from 'next/image'
 import {BlogPosts} from 'app/components/posts'
 import LiteralAPI from 'app/lib/literal'
 import LastFmAPI from 'app/lib/lastfm'
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/react"
+import {SpeedInsights} from "@vercel/speed-insights/next"
+import {Analytics} from "@vercel/analytics/react"
+import LetterboxdAPI from 'app/lib/letterboxd'
+
+async function getRecentMovies() {
+    const api = new LetterboxdAPI();
+    try {
+        const movies = await api.getMovies();
+        return movies.slice(0, 8);  // Get the 8 most recent movies (already sorted)
+    } catch (error) {
+        console.error('Error fetching recent movies:', error);
+        return [];
+    }
+}
 
 async function getRecentBooks() {
     const api = new LiteralAPI();
@@ -45,7 +57,7 @@ async function getRecentBooks() {
 async function getTopArtists() {
     const api = new LastFmAPI(process.env.LASTFM_API_KEY!);
     try {
-        return await api.getTopArtists('ryangr69', 8);
+        return await api.getTopArtists('ryangr69', 5);
     } catch (error) {
         console.error('Error fetching top artists:', error);
         return [];
@@ -55,6 +67,7 @@ async function getTopArtists() {
 export default async function Page() {
     const recentBooks = await getRecentBooks();
     const topArtists = await getTopArtists();
+    const recentMovies = await getRecentMovies();
 
     return (
         <section>
@@ -97,25 +110,20 @@ export default async function Page() {
             )}
 
             <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
-                Top Artists (Last Month)
+                Top Artists (Past Month)
             </h2>
             {topArtists.length > 0 ? (
-                <div className="grid grid-cols-4 gap-4">
+                <div className="space-y-4">
                     {topArtists.map((artist) => (
-                        <div key={artist.mbid} className="w-32">
-                            <div className="relative w-32 h-32 mb-2">
-                                <Image
-                                    src={artist.image[0]['#text']} // Use medium-sized image
-                                    alt={`${artist.name}`}
-                                    fill
-                                    style={{objectFit: 'cover'}}
-                                    className="rounded-md"
-                                />
+                        <div key={artist.mbid} className="w-full">
+                            <div className="flex justify-between items-center mb-1">
+                                <p className="text-sm font-medium">{artist.name}</p>
+                                <p className="text-xs text-gray-600 dark:text-gray-400">{artist.playcount} plays</p>
                             </div>
-                            <p className="text-sm font-medium line-clamp-2">{artist.name}</p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">
-                                {artist.playcount} plays
-                            </p>
+                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div className="bg-blue-600 h-2.5 rounded-full"
+                                     style={{width: `${(artist.playcount / topArtists[0].playcount) * 100}%`}}></div>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -123,11 +131,44 @@ export default async function Page() {
                 <p>No top artists found.</p>
             )}
 
+            <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
+                Recently Watched Movies
+            </h2>
+            {recentMovies.length > 0 ? (
+                <div className="grid grid-cols-4 gap-4">
+                    {recentMovies.map((movie) => (
+                        <a
+                            key={movie.guid}
+                            href={movie.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-32 block hover:opacity-80 transition-opacity cursor-pointer"
+                        >
+                            <div className="relative w-32 h-48 mb-2">
+                                <Image
+                                    src={movie.poster || '/images/movie-poster-placeholder.png'}
+                                    alt={`Poster of ${movie.filmTitle}`}
+                                    fill
+                                    style={{objectFit: 'cover'}}
+                                    className="rounded-md"
+                                />
+                            </div>
+                            <div className="flex justify-between items-baseline">
+                                <p className="text-sm font-medium line-clamp-2 flex-grow">{movie.filmTitle}</p>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 ml-2">{movie.filmYear}</p>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+            ) : (
+                <p>No recent movies found.</p>
+            )}
+
             <div className="my-8">
                 <BlogPosts/>
             </div>
-            <SpeedInsights />
-            <Analytics />
+            <SpeedInsights/>
+            <Analytics/>
         </section>
     )
 }

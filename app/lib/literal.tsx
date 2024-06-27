@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, {AxiosInstance} from 'axios';
 
 // Define types for the API responses
 interface Profile {
@@ -97,20 +97,12 @@ class LiteralAPI {
         });
     }
 
-    private async executeQuery<T>(query: string, variables: any = {}): Promise<T> {
-        if (this.token) {
-            this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
-        }
-
-        const response = await this.axiosInstance.post('', {
-            query,
-            variables,
-        });
-
-        return response.data.data;
-    }
-
-    async login(email: string, password: string): Promise<{ token: string; email: string; languages: string[]; profile: Profile }> {
+    async login(email: string, password: string): Promise<{
+        token: string;
+        email: string;
+        languages: string[];
+        profile: Profile
+    }> {
         const query = `
       mutation login($email: String!, $password: String!) {
         login(email: $email, password: $password) {
@@ -128,7 +120,9 @@ class LiteralAPI {
       }
     `;
 
-        const result = await this.executeQuery<{ login: { token: string; email: string; languages: string[]; profile: Profile } }>(query, { email, password });
+        const result = await this.executeQuery<{
+            login: { token: string; email: string; languages: string[]; profile: Profile }
+        }>(query, {email, password});
         this.token = result.login.token;
         return result.login;
     }
@@ -168,7 +162,9 @@ class LiteralAPI {
         return this.executeQuery<{ myReadingStates: ReadingState[] }>(query);
     }
 
-    async updateReadingState(bookId: string, readingStatus: 'WANTS_TO_READ' | 'IS_READING' | 'FINISHED' | 'DROPPED' | 'NONE'): Promise<{ updateReadingState: ReadingState }> {
+    async updateReadingState(bookId: string, readingStatus: 'WANTS_TO_READ' | 'IS_READING' | 'FINISHED' | 'DROPPED' | 'NONE'): Promise<{
+        updateReadingState: ReadingState
+    }> {
         const query = `
       mutation updateReadingState($bookId: String!, $readingStatus: ReadingStatus!) {
         updateReadingState(bookId: $bookId, readingStatus: $readingStatus) {
@@ -200,7 +196,7 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ updateReadingState: ReadingState }>(query, { bookId, readingStatus });
+        return this.executeQuery<{ updateReadingState: ReadingState }>(query, {bookId, readingStatus});
     }
 
     async getMyBooks(): Promise<{ myBooks: Book[] }> {
@@ -257,7 +253,7 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ momentsByHandleAndBookId: Highlight[] }>(query, { bookId, handle });
+        return this.executeQuery<{ momentsByHandleAndBookId: Highlight[] }>(query, {bookId, handle});
     }
 
     async getReadDates(bookId: string, profileId: string): Promise<{ getReadDates: ReadDate[] }> {
@@ -274,10 +270,12 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ getReadDates: ReadDate[] }>(query, { bookId, profileId });
+        return this.executeQuery<{ getReadDates: ReadDate[] }>(query, {bookId, profileId});
     }
 
-    async createReview(bookId: string, text: string | null, spoiler: boolean, rating: number, tags: string[]): Promise<{ createReview: Review }> {
+    async createReview(bookId: string, text: string | null, spoiler: boolean, rating: number, tags: string[]): Promise<{
+        createReview: Review
+    }> {
         const query = `
       mutation createReview($bookId: String!, $text: String, $spoiler: Boolean!, $rating: Float!, $tags: [String!]) {
         createReview(bookId: $bookId, text: $text, spoiler: $spoiler, rating: $rating, tags: $tags) {
@@ -292,10 +290,12 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ createReview: Review }>(query, { bookId, text, spoiler, rating, tags });
+        return this.executeQuery<{ createReview: Review }>(query, {bookId, text, spoiler, rating, tags});
     }
 
-    async updateReview(id: string, text: string | null, spoiler: boolean, rating: number, tags: string[]): Promise<{ updateReview: Review }> {
+    async updateReview(id: string, text: string | null, spoiler: boolean, rating: number, tags: string[]): Promise<{
+        updateReview: Review
+    }> {
         const query = `
       mutation updateReview($id: String!, $text: String, $spoiler: Boolean!, $rating: Float!, $tags: [String!]) {
         updateReview(id: $id, text: $text, spoiler: $spoiler, rating: $rating, tags: $tags) {
@@ -310,10 +310,12 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ updateReview: Review }>(query, { id, text, spoiler, rating, tags });
+        return this.executeQuery<{ updateReview: Review }>(query, {id, text, spoiler, rating, tags});
     }
 
-    async createHighlight(note: string | null, quote: string | null, spoiler: boolean | null, bookId: string, where: string | null): Promise<{ createMoment: Highlight }> {
+    async createHighlight(note: string | null, quote: string | null, spoiler: boolean | null, bookId: string, where: string | null): Promise<{
+        createMoment: Highlight
+    }> {
         const query = `
       mutation createMoment($note: String, $quote: String, $spoiler: Boolean, $bookId: String!, $where: String) {
         createMoment(note: $note, quote: $quote, spoiler: $spoiler, bookId: $bookId, where: $where) {
@@ -331,7 +333,7 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ createMoment: Highlight }>(query, { note, quote, spoiler, bookId, where });
+        return this.executeQuery<{ createMoment: Highlight }>(query, {note, quote, spoiler, bookId, where});
     }
 
     async getShelfBySlug(shelfSlug: string): Promise<{ shelf: Shelf }> {
@@ -374,10 +376,12 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ shelf: Shelf }>(query, { shelfSlug });
+        return this.executeQuery<{ shelf: Shelf }>(query, {shelfSlug});
     }
 
-    async getShelvesByProfileId(profileId: string, limit: number, offset: number): Promise<{ getShelvesByProfileId: Shelf[] }> {
+    async getShelvesByProfileId(profileId: string, limit: number, offset: number): Promise<{
+        getShelvesByProfileId: Shelf[]
+    }> {
         const query = `
       query getShelvesByProfileId($profileId: String!, $limit: Int!, $offset: Int!) {
         getShelvesByProfileId(profileId: $profileId, limit: $limit, offset: $offset) {
@@ -409,10 +413,12 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ getShelvesByProfileId: Shelf[] }>(query, { profileId, limit, offset });
+        return this.executeQuery<{ getShelvesByProfileId: Shelf[] }>(query, {profileId, limit, offset});
     }
 
-    async getBooksByReadingStateAndProfile(limit: number, offset: number, readingStatus: 'WANTS_TO_READ' | 'IS_READING' | 'FINISHED' | 'DROPPED' | 'NONE', profileId: string): Promise<{ booksByReadingStateAndProfile: Book[] }> {
+    async getBooksByReadingStateAndProfile(limit: number, offset: number, readingStatus: 'WANTS_TO_READ' | 'IS_READING' | 'FINISHED' | 'DROPPED' | 'NONE', profileId: string): Promise<{
+        booksByReadingStateAndProfile: Book[]
+    }> {
         const query = `
       query booksByReadingStateAndProfile($limit: Int!, $offset: Int!, $readingStatus: ReadingStatus!, $profileId: String!) {
         booksByReadingStateAndProfile(limit: $limit, offset: $offset, readingStatus: $readingStatus, profileId: $profileId) {
@@ -437,7 +443,12 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ booksByReadingStateAndProfile: Book[] }>(query, { limit, offset, readingStatus, profileId });
+        return this.executeQuery<{ booksByReadingStateAndProfile: Book[] }>(query, {
+            limit,
+            offset,
+            readingStatus,
+            profileId
+        });
     }
 
     async getProfileByHandle(handle: string): Promise<{ profile: Profile }> {
@@ -454,7 +465,7 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ profile: Profile }>(query, { handle });
+        return this.executeQuery<{ profile: Profile }>(query, {handle});
     }
 
     async getBookByIsbn(isbn13: string): Promise<{ book: Book }> {
@@ -482,7 +493,20 @@ class LiteralAPI {
       }
     `;
 
-        return this.executeQuery<{ book: Book }>(query, { isbn13 });
+        return this.executeQuery<{ book: Book }>(query, {isbn13});
+    }
+
+    private async executeQuery<T>(query: string, variables: any = {}): Promise<T> {
+        if (this.token) {
+            this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+        }
+
+        const response = await this.axiosInstance.post('', {
+            query,
+            variables,
+        });
+
+        return response.data.data;
     }
 }
 
