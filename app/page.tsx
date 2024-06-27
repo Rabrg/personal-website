@@ -82,28 +82,6 @@ export default async function Page() {
         mode, which eases long coding sessions by reducing eye strain.`}
             </p>
 
-            {topArtists.length > 0 && (
-                <>
-                    <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
-                        Top Artists (Past Month)
-                    </h2>
-                    <div className="space-y-4">
-                        {topArtists.map((artist) => (
-                            <div key={artist.mbid} className="w-full">
-                                <div className="flex justify-between items-center mb-1">
-                                    <p className="text-sm font-medium">{artist.name}</p>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">{artist.playcount} plays</p>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                    <div className="bg-blue-600 h-2.5 rounded-full"
-                                         style={{width: `${(artist.playcount / topArtists[0].playcount) * 100}%`}}></div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </>
-            )}
-
             {recentBooks.length > 0 && (
                 <>
                     <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
@@ -159,6 +137,28 @@ export default async function Page() {
                                     <p className="text-xs text-gray-600 dark:text-gray-400 ml-2">{movie.filmYear}</p>
                                 </div>
                             </a>
+                        ))}
+                    </div>
+                </>
+            )}
+
+            {topArtists.length > 0 && (
+                <>
+                    <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
+                        Top Artists (Past Month)
+                    </h2>
+                    <div className="space-y-4">
+                        {topArtists.map((artist) => (
+                            <div key={artist.mbid} className="w-full">
+                                <div className="flex justify-between items-center mb-1">
+                                    <p className="text-sm font-medium">{artist.name}</p>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">{artist.playcount} plays</p>
+                                </div>
+                                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                    <div className="bg-blue-600 h-2.5 rounded-full"
+                                         style={{width: `${(artist.playcount / topArtists[0].playcount) * 100}%`}}></div>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </>
