@@ -10,7 +10,7 @@ async function getRecentMovies() {
     const api = new LetterboxdAPI();
     try {
         const movies = await api.getMovies();
-        return movies.slice(0, 8);  // Get the 8 most recent movies (already sorted)
+        return movies.slice(0, 4);
     } catch (error) {
         console.error('Error fetching recent movies:', error);
         return [];
@@ -72,15 +72,15 @@ export default async function Page() {
     return (
         <section>
             <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
-                My Portfolio
+                My Training Data
             </h1>
-            <p className="mb-4">
-                {`I'm a Vim enthusiast and tab advocate, finding unmatched efficiency in
-        Vim's keystroke commands and tabs' flexibility for personal viewing
-        preferences. This extends to my support for static typing, where its
-        early error detection ensures cleaner code, and my preference for dark
-        mode, which eases long coding sessions by reducing eye strain.`}
-            </p>
+        {/*    <p className="mb-4">*/}
+        {/*        {`I'm a Vim enthusiast and tab advocate, finding unmatched efficiency in*/}
+        {/*Vim's keystroke commands and tabs' flexibility for personal viewing*/}
+        {/*preferences. This extends to my support for static typing, where its*/}
+        {/*early error detection ensures cleaner code, and my preference for dark*/}
+        {/*mode, which eases long coding sessions by reducing eye strain.`}*/}
+        {/*    </p>*/}
 
             {recentBooks.length > 0 && (
                 <>
@@ -145,7 +145,7 @@ export default async function Page() {
             {topArtists.length > 0 && (
                 <>
                     <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
-                        Top Artists (Past Month)
+                        Recently Listened to Artists (Past Month)
                     </h2>
                     <div className="space-y-4">
                         {topArtists.map((artist) => (
