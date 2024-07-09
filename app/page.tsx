@@ -4,18 +4,18 @@ import LiteralAPI from 'app/lib/literal'
 import LastFmAPI from 'app/lib/lastfm'
 import {SpeedInsights} from "@vercel/speed-insights/next"
 import {Analytics} from "@vercel/analytics/react"
-import LetterboxdAPI from 'app/lib/letterboxd'
+// import LetterboxdAPI from 'app/lib/letterboxd'
 
-async function getRecentMovies() {
-    const api = new LetterboxdAPI();
-    try {
-        const movies = await api.getMovies();
-        return movies.slice(0, 4);
-    } catch (error) {
-        console.error('Error fetching recent movies:', error);
-        return [];
-    }
-}
+// async function getRecentMovies() {
+//     const api = new LetterboxdAPI();
+//     try {
+//         const movies = await api.getMovies();
+//         return movies.slice(0, 4);
+//     } catch (error) {
+//         console.error('Error fetching recent movies:', error);
+//         return [];
+//     }
+// }
 
 async function getRecentBooks() {
     const api = new LiteralAPI();
@@ -57,7 +57,7 @@ async function getRecentBooks() {
 async function getTopArtists() {
     const api = new LastFmAPI(process.env.LASTFM_API_KEY!);
     try {
-        return await api.getTopArtists('ryangr69', 5);
+        return await api.getTopArtists('ryangr69', 7);
     } catch (error) {
         console.error('Error fetching top artists:', error);
         return [];
@@ -67,20 +67,20 @@ async function getTopArtists() {
 export default async function Page() {
     const recentBooks = await getRecentBooks();
     const topArtists = await getTopArtists();
-    const recentMovies = await getRecentMovies();
+    // const recentMovies = await getRecentMovies();
 
     return (
         <section>
             <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
-                My Training Data
+                Training Dataset
             </h1>
-        {/*    <p className="mb-4">*/}
-        {/*        {`I'm a Vim enthusiast and tab advocate, finding unmatched efficiency in*/}
-        {/*Vim's keystroke commands and tabs' flexibility for personal viewing*/}
-        {/*preferences. This extends to my support for static typing, where its*/}
-        {/*early error detection ensures cleaner code, and my preference for dark*/}
-        {/*mode, which eases long coding sessions by reducing eye strain.`}*/}
-        {/*    </p>*/}
+            {/*    <p className="mb-4">*/}
+            {/*        {`I'm a Vim enthusiast and tab advocate, finding unmatched efficiency in*/}
+            {/*Vim's keystroke commands and tabs' flexibility for personal viewing*/}
+            {/*preferences. This extends to my support for static typing, where its*/}
+            {/*early error detection ensures cleaner code, and my preference for dark*/}
+            {/*mode, which eases long coding sessions by reducing eye strain.`}*/}
+            {/*    </p>*/}
 
             {recentBooks.length > 0 && (
                 <>
@@ -109,43 +109,43 @@ export default async function Page() {
                 </>
             )}
 
-            {recentMovies.length > 0 && (
-                <>
-                    <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
-                        Recently Watched Movies
-                    </h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        {recentMovies.map((movie) => (
-                            <a
-                                key={movie.guid}
-                                href={movie.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full block hover:opacity-80 transition-opacity cursor-pointer"
-                            >
-                                <div className="relative w-full aspect-[2/3] mb-2">
-                                    <Image
-                                        src={movie.poster || '/images/movie-poster-placeholder.png'}
-                                        alt={`Poster of ${movie.filmTitle}`}
-                                        fill
-                                        style={{objectFit: 'cover'}}
-                                        className="rounded-md"
-                                    />
-                                </div>
-                                <div className="flex justify-between items-baseline">
-                                    <p className="text-sm font-medium line-clamp-2 flex-grow">{movie.filmTitle}</p>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 ml-2">{movie.filmYear}</p>
-                                </div>
-                            </a>
-                        ))}
-                    </div>
-                </>
-            )}
+            {/*{recentMovies.length > 0 && (*/}
+            {/*    <>*/}
+            {/*        <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">*/}
+            {/*            Recently Watched Movies*/}
+            {/*        </h2>*/}
+            {/*        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">*/}
+            {/*            {recentMovies.map((movie) => (*/}
+            {/*                <a*/}
+            {/*                    key={movie.guid}*/}
+            {/*                    href={movie.link}*/}
+            {/*                    target="_blank"*/}
+            {/*                    rel="noopener noreferrer"*/}
+            {/*                    className="w-full block hover:opacity-80 transition-opacity cursor-pointer"*/}
+            {/*                >*/}
+            {/*                    <div className="relative w-full aspect-[2/3] mb-2">*/}
+            {/*                        <Image*/}
+            {/*                            src={movie.poster || '/images/movie-poster-placeholder.png'}*/}
+            {/*                            alt={`Poster of ${movie.filmTitle}`}*/}
+            {/*                            fill*/}
+            {/*                            style={{objectFit: 'cover'}}*/}
+            {/*                            className="rounded-md"*/}
+            {/*                        />*/}
+            {/*                    </div>*/}
+            {/*                    <div className="flex justify-between items-baseline">*/}
+            {/*                        <p className="text-sm font-medium line-clamp-2 flex-grow">{movie.filmTitle}</p>*/}
+            {/*                        <p className="text-xs text-gray-600 dark:text-gray-400 ml-2">{movie.filmYear}</p>*/}
+            {/*                    </div>*/}
+            {/*                </a>*/}
+            {/*            ))}*/}
+            {/*        </div>*/}
+            {/*    </>*/}
+            {/*)}*/}
 
             {topArtists.length > 0 && (
                 <>
                     <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
-                        Recently Listened to Artists (Past Month)
+                        Recently Listened to Artists
                     </h2>
                     <div className="space-y-4">
                         {topArtists.map((artist) => (
