@@ -4,6 +4,8 @@ import LiteralAPI from 'app/lib/literal'
 import LastFmAPI from 'app/lib/lastfm'
 import {SpeedInsights} from "@vercel/speed-insights/next"
 import {Analytics} from "@vercel/analytics/react"
+import Bio from 'app/components/bio'
+
 // import LetterboxdAPI from 'app/lib/letterboxd'
 
 // async function getRecentMovies() {
@@ -67,19 +69,20 @@ async function getTopArtists() {
 export default async function Page() {
     const recentBooks = await getRecentBooks();
     const topArtists = await getTopArtists();
-    // const recentMovies = await getRecentMovies();
 
     return (
         <section>
-            <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
-                Training Dataset
-            </h1>
+            {/*<Bio/>*/}
+
+            <h2 className="mb-8 text-2xl font-semibold tracking-tighter">
+                Muses
+            </h2>
 
             {recentBooks.length > 0 && (
                 <>
-                    <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
+                    <h3 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
                         Recently Read Books
-                    </h2>
+                    </h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         {recentBooks.map((state) => (
                             <div key={state.id} className="w-full">
@@ -102,44 +105,11 @@ export default async function Page() {
                 </>
             )}
 
-            {/*{recentMovies.length > 0 && (*/}
-            {/*    <>*/}
-            {/*        <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">*/}
-            {/*            Recently Watched Movies*/}
-            {/*        </h2>*/}
-            {/*        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">*/}
-            {/*            {recentMovies.map((movie) => (*/}
-            {/*                <a*/}
-            {/*                    key={movie.guid}*/}
-            {/*                    href={movie.link}*/}
-            {/*                    target="_blank"*/}
-            {/*                    rel="noopener noreferrer"*/}
-            {/*                    className="w-full block hover:opacity-80 transition-opacity cursor-pointer"*/}
-            {/*                >*/}
-            {/*                    <div className="relative w-full aspect-[2/3] mb-2">*/}
-            {/*                        <Image*/}
-            {/*                            src={movie.poster || '/images/movie-poster-placeholder.png'}*/}
-            {/*                            alt={`Poster of ${movie.filmTitle}`}*/}
-            {/*                            fill*/}
-            {/*                            style={{objectFit: 'cover'}}*/}
-            {/*                            className="rounded-md"*/}
-            {/*                        />*/}
-            {/*                    </div>*/}
-            {/*                    <div className="flex justify-between items-baseline">*/}
-            {/*                        <p className="text-sm font-medium line-clamp-2 flex-grow">{movie.filmTitle}</p>*/}
-            {/*                        <p className="text-xs text-gray-600 dark:text-gray-400 ml-2">{movie.filmYear}</p>*/}
-            {/*                    </div>*/}
-            {/*                </a>*/}
-            {/*            ))}*/}
-            {/*        </div>*/}
-            {/*    </>*/}
-            {/*)}*/}
-
             {topArtists.length > 0 && (
                 <>
-                    <h2 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
+                    <h3 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
                         Recently Listened to Artists
-                    </h2>
+                    </h3>
                     <div className="space-y-4">
                         {topArtists.map((artist) => (
                             <div key={artist.mbid} className="w-full">
@@ -157,9 +127,14 @@ export default async function Page() {
                 </>
             )}
 
+            <h2 className="mt-12 mb-8 text-2xl font-semibold tracking-tighter">
+                Musings
+            </h2>
+
             <div className="my-8">
                 <BlogPosts/>
             </div>
+
             <SpeedInsights/>
             <Analytics/>
         </section>

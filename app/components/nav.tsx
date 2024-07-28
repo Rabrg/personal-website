@@ -5,7 +5,7 @@ const navItems = {
         name: 'home',
     },
     '/blog': {
-        name: 'blog',
+        name: 'musings',
     },
     'https://x.com/rabrg': {
         name: 'twitter',
