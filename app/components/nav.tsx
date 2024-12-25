@@ -7,6 +7,9 @@ const navItems = {
     '/blog': {
         name: 'musings',
     },
+    '/quotes': {
+        name: 'quotes',
+    },
     'https://x.com/rabrg': {
         name: 'twitter',
     },

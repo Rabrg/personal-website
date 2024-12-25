@@ -50,8 +50,17 @@ export default class LetterboxdAPI {
             const imageMatch = item.description?._cdata?.match(/<img src="([^"]+)"/) || [];
             const imageURL = imageMatch[1] || '';
 
+            // Example returned title: "It's a Wonderful Life, 1946 - ★★★★½"
+            // Decouple the rating from the title
+            const titleParts = item.title?._text?.split(' - ') || [];
+            const title = titleParts[0] || '';
+            const starRating = titleParts[1] || '';
+            // Convert stars to a number between 1-5
+            const rating = starRating.replace(/[½]/g, '').length;
+
             return {
-                title: item.title?._text || '',
+                title: title,
+                rating: rating,
                 link: item.link?._text || '',
                 guid: item.guid?._text || '',
                 pubDate: item.pubDate?._text ? new Date(item.pubDate._text) : null,
@@ -74,6 +83,7 @@ export default class LetterboxdAPI {
             return 0;
         });
 
-        return movies;
+        // Keep only movies that have a rating of >=
+        return movies.filter(movie => movie.rating >= 4);
     }
 }

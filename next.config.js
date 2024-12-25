@@ -17,6 +17,18 @@ const nextConfig = {
                 pathname: '**',
             },
             {
+                protocol: 'https',
+                hostname: 'i.gr-assets.com',
+                port: '',
+                pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'images-na.ssl-images-amazon.com',
+                port: '',
+                pathname: '**',
+            },
+            {
                 protocol: 'http',
                 hostname: 'books.google.com',
                 port: '',
