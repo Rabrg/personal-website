@@ -11,6 +11,11 @@ export const metadata = {
   
   const quotesData: Quote[] = [
     {
+      text: "The peculiar self-debasement of a man consists in this,—when he makes himself an instrument to a temporary and perishable purpose, and deigns to spend care and labour on something else than the imperishable and eternal.",
+      author: 'Johann Gottlieb Fichte',
+      work: 'On the Nature of the Scholar'
+    },
+    {
         text: "When I need, then I shall have, because I know that it is just to give more to whoever asks for more, my demand is my size, my emptiness is my measure.",
         author: 'Clarice Lispector',
         work: 'The Passion According to G.H.'
