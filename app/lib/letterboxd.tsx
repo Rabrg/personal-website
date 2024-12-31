@@ -85,6 +85,6 @@ export default class LetterboxdAPI {
         });
 
         // Keep only movies that have a rating of >=
-        return movies.filter(movie => movie.rating > 3.5);
+        return movies.filter(movie => movie.rating >= 3.5);
     }
 }
