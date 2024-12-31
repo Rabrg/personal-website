@@ -12,9 +12,12 @@ async function getRecentMovies() {
     const api = new LetterboxdAPI();
     try {
         const movies = await api.getMovies();
-        // Print the first movie
-        console.log(movies[0]);
-        return movies.slice(0, 8);
+        // Print the title and rating of all movies
+        console.log("Movie - Rating (0-5)")
+        movies.forEach(movie => {
+            console.log(`${movie.title} - ${movie.rating}`);
+        });
+        return movies.filter(movie => movie.rating >= 4).slice(0, 8);
     } catch (error) {
         console.error('Error fetching recent movies:', error);
         return [];
@@ -22,7 +25,7 @@ async function getRecentMovies() {
 }
 
 async function getRecentBooks() {
-    const url = 'https://www.goodreads.com/review/list/81182829?shelf=read&sort=date_read';
+    const url = 'https://www.goodreads.com/review/list/81182829?shelf=read&sort=date_read&per_page=100';
   
     const response = await fetch(url);
     const html = await response.text();
@@ -60,6 +63,12 @@ async function getRecentBooks() {
         });
       }
     });
+
+    // Print all titles and authors
+    console.log("Book - Author")
+    books.forEach(book => {
+        console.log(`${book.title} - ${book.authors.join(', ')}`);
+    });
   
     return books.slice(0, 8);
   }
@@ -68,7 +77,7 @@ async function getRecentBooks() {
 async function getTopArtists() {
     const api = new LastFmAPI(process.env.LASTFM_API_KEY!);
     try {
-        return await api.getTopArtists('ryangr69', 7);
+        return await api.getTopArtists('ryangr69', 16).then(artists => artists.slice(0, 7));
     } catch (error) {
         console.error('Error fetching top artists:', error);
         return [];
@@ -77,7 +86,9 @@ async function getTopArtists() {
 
 export default async function Page() {
     const recentBooks = await getRecentBooks();
+    console.log()
     const topArtists = await getTopArtists();
+    console.log()
     const recentMovies = await getRecentMovies();
   
     return (

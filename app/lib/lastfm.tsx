@@ -39,7 +39,11 @@ class LastFmAPI {
             // Type assertion to match our expected structure
             const typedResponse = response as unknown as TopArtistsResponse;
 
-            console.log(typedResponse.topartists.artist[0]);
+            // Print the name and number of plays for each artist
+            console.log("Artist - Plays")
+            typedResponse.topartists.artist.forEach(artist => {
+                console.log(`${artist.name} - ${artist.playcount}`);
+            });
             return typedResponse.topartists.artist;
         } catch (error) {
             console.error('Error fetching top artists:', error);

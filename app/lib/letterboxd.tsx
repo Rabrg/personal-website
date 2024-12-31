@@ -17,6 +17,7 @@ interface FeedItem {
 
 interface Movie {
     title: string;
+    rating: number;
     link: string;
     guid: string;
     pubDate: Date | null;
@@ -84,6 +85,6 @@ export default class LetterboxdAPI {
         });
 
         // Keep only movies that have a rating of >=
-        return movies.filter(movie => movie.rating >= 4);
+        return movies.filter(movie => movie.rating > 3.5);
     }
 }
