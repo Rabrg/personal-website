@@ -99,6 +99,8 @@ export default async function Page() {
   
         {recentBooks.length > 0 && (
           <>
+            {/* <p className="mb-4">Below are examples from my personal training dataset, aggregated from my Goodreads, Letterboxd, and Last.fm accounts.</p> */}
+
             <h3 className="mt-8 mb-4 text-xl font-semibold tracking-tighter">
               Recently Read Books
             </h3>
@@ -173,13 +175,13 @@ export default async function Page() {
           </>
         )}
   
-        <h2 className="mt-12 mb-8 text-2xl font-semibold tracking-tighter">
+        {/* <h2 className="mt-12 mb-8 text-2xl font-semibold tracking-tighter">
           Musings
         </h2>
   
         <div className="my-8">
           <BlogPosts/>
-        </div>
+        </div> */}
   
         <SpeedInsights/>
         <Analytics/>
