@@ -55,7 +55,11 @@ async function getRecentBooks() {
         cover = cover.replace('_SY75_.', '');
       }
   
-      if (title) {
+      if (
+        title &&
+        !title.includes("Plato") &&
+        !title.includes("Wabi-Sabi")
+      ) {
         books.push({
           title,
           authors,
@@ -75,6 +79,7 @@ async function getRecentBooks() {
   
 
 async function getTopArtists() {
+    console.log("lastfmapikey ", process.env.LASTFM_API_KEY)
     const api = new LastFmAPI(process.env.LASTFM_API_KEY!);
     try {
         return await api.getTopArtists('ryangr69', 16).then(artists => artists.slice(0, 7));
