@@ -10,6 +10,9 @@ const navItems = {
     'https://x.com/rabrg': {
         name: 'twitter',
     },
+    'https://substack.com/@ryangr': {
+        name: 'substack',
+    },
 }
 
 export function Navbar() {
