@@ -20,11 +20,6 @@ export const metadata = {
         author: 'Ralph Waldo Emerson',
         work: 'The American Scholar'
     },
-    {
-        text: "Sapere aude!",
-        author: 'Horace',
-        work: 'First Book of Letters'
-    },
   ]
   
   export default function QuotesPage() {
