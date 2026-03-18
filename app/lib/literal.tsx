@@ -89,8 +89,11 @@ class LiteralAPI {
     private token: string | null = null;
 
     constructor() {
+        const baseURL = process.env.LITERAL_API_URL || 'https://api.literal.club/graphql/';
+
         this.axiosInstance = axios.create({
-            baseURL: 'https://literal.club/graphql/',
+            baseURL,
+            proxy: false,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -505,6 +508,10 @@ class LiteralAPI {
             query,
             variables,
         });
+
+        if (response.data.errors?.length) {
+            throw new Error(response.data.errors.map((error: { message: string }) => error.message).join('; '));
+        }
 
         return response.data.data;
     }

@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import convert from 'xml-js';
 
 interface FeedItem {

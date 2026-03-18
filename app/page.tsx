@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import {BlogPosts} from 'app/components/posts'
+import LiteralAPI from 'app/lib/literal'
 import LastFmAPI from 'app/lib/lastfm'
 import {SpeedInsights} from "@vercel/speed-insights/next"
 import {Analytics} from "@vercel/analytics/react"
 import Bio from 'app/components/bio'
-import cheerio, { load } from 'cheerio';
 
 import LetterboxdAPI from 'app/lib/letterboxd'
 
@@ -12,11 +12,6 @@ async function getRecentMovies() {
     const api = new LetterboxdAPI();
     try {
         const movies = await api.getMovies();
-        // Print the title and rating of all movies
-        console.log("Movie - Rating (0-5)")
-        movies.forEach(movie => {
-            console.log(`${movie.title} - ${movie.rating}`);
-        });
         return movies.filter(movie => movie.rating >= 4).slice(0, 8);
     } catch (error) {
         console.error('Error fetching recent movies:', error);
@@ -25,61 +20,60 @@ async function getRecentMovies() {
 }
 
 async function getRecentBooks() {
-    const url = 'https://www.goodreads.com/review/list/81182829?shelf=read&sort=date_read&per_page=100';
-  
-    const response = await fetch(url);
-    const html = await response.text();
-    const $ = load(html);
-  
-    const books: {
-      title: string;
-      authors: string[];
-      cover: string;
-    }[] = [];
-  
-    $('tr.bookalike.review').each((_, el) => {
-      let title = $(el).find('td.field.title div.value a').text().trim();
-      let cover = $(el).find('td.field.cover div.value img').attr('src') || '/images/book-cover-placeholder.png';
-  
-      const authors = $(el)
-        .find('td.field.author div.value a')
-        .map((_, authorEl) => $(authorEl).text().trim())
-        .get();
-  
-      if (title.includes(':')) {
-        title = title.split(':')[0];
-      }
-  
-      // Transform the cover URL into a higher-quality version
-      if (cover.includes('_SY75_.')) {
-        cover = cover.replace('_SY75_.', '');
-      }
-  
-      if (
-        title &&
-        !title.includes("Plato") &&
-        !title.includes("Wabi-Sabi")
-      ) {
-        books.push({
-          title,
-          authors,
-          cover,
-        });
-      }
-    });
+    const email = process.env.LITERAL_EMAIL;
+    const password = process.env.LITERAL_PASSWORD;
 
-    // Print all titles and authors
-    console.log("Book - Author")
-    books.forEach(book => {
-        console.log(`${book.title} - ${book.authors.join(', ')}`);
-    });
-  
-    return books.slice(0, 8);
-  }
+    if (!email || !password) {
+        console.error('Missing Literal credentials');
+        return [];
+    }
+
+    const api = new LiteralAPI();
+
+    try {
+        await api.login(email, password);
+        const {myReadingStates} = await api.getMyReadingStates();
+
+        const books = await Promise.all(
+            myReadingStates
+                .filter((state) => state.status === 'FINISHED' || state.status === 'IS_READING')
+                .map(async (state) => {
+                    if (state.status === 'IS_READING') {
+                        return {state, sortDate: new Date().toISOString()};
+                    }
+
+                    const {getReadDates} = await api.getReadDates(state.bookId, state.profileId);
+                    const mostRecentReadDate = getReadDates
+                        .filter((date) => date.finished)
+                        .sort((a, b) => new Date(a.updatedAt!).getTime() - new Date(b.updatedAt!).getTime())[0];
+
+                    return {
+                        state,
+                        sortDate: mostRecentReadDate?.updatedAt || mostRecentReadDate?.started || state.createdAt,
+                    };
+                })
+        );
+
+        return books
+            .sort((a, b) => {
+                if (a.state.status === 'IS_READING' && b.state.status !== 'IS_READING') return -1;
+                if (a.state.status !== 'IS_READING' && b.state.status === 'IS_READING') return 1;
+                return new Date(b.sortDate).getTime() - new Date(a.sortDate).getTime();
+            })
+            .map(({state}) => ({
+                title: state.book.title,
+                authors: state.book.authors.map((author) => author.name),
+                cover: state.book.cover || '/images/book-cover-placeholder.png',
+            }))
+            .slice(0, 8);
+    } catch (error) {
+        console.error('Error fetching recent books:', error);
+        return [];
+    }
+}
   
 
 async function getTopArtists() {
-    console.log("lastfmapikey ", process.env.LASTFM_API_KEY)
     const api = new LastFmAPI(process.env.LASTFM_API_KEY!);
     try {
         return await api.getTopArtists('ryangr69', 16).then(artists => artists.slice(0, 7));
@@ -91,9 +85,7 @@ async function getTopArtists() {
 
 export default async function Page() {
     const recentBooks = await getRecentBooks();
-    console.log()
     const topArtists = await getTopArtists();
-    console.log()
     const recentMovies = await getRecentMovies();
   
     return (
